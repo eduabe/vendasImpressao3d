@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { DollarSign, Package, Truck, Store } from 'lucide-react';
 import { createSale, updateSale, getPlatforms } from '../services/api';
-import { SaleStatus } from '../domain/models/Sale';
+import SaleStatus from '../domain/models/SaleStatus';
 import toast from 'react-hot-toast';
 
 const SaleForm = ({ sale, onSubmit, onCancel }) => {
@@ -64,7 +64,7 @@ const SaleForm = ({ sale, onSubmit, onCancel }) => {
         valorRecebido: parseFloat(formData.valorRecebido),
         custoImpressao: parseFloat(formData.custoImpressao) || 0,
         custoEnvio: parseFloat(formData.custoEnvio) || 0,
-        plataformaId: parseInt(formData.plataformaId),
+        plataformaId: String(formData.plataformaId),
         origemVenda: formData.origemVenda
       };
 

@@ -4,7 +4,7 @@ import { formatCurrency, formatPercent, formatDate } from '../utils/format';
 import { Trash2, Edit2, Filter, ArrowUp, ArrowDown } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import toast from 'react-hot-toast';
-import { SaleStatus } from '../domain/models/Sale';
+import SaleStatus from '../domain/models/SaleStatus';
 
 const statusConfig = {
   'Em Produção': { color: 'bg-yellow-100 text-yellow-800', icon: '🏭' },
@@ -299,7 +299,7 @@ const SaleList = ({ onEdit }) => {
                     <div className="text-xs space-y-1">
                       <div>Impressão: {formatCurrency(sale.custoImpressao)}</div>
                       <div>Envio: {formatCurrency(sale.custoEnvio)}</div>
-                      <div>Plataforma: {formatCurrency(sale.custoVendaPlataforma)}</div>
+                      <div>Plataforma: {formatCurrency(sale.custoVendaPlataforma)} {sale.plataformaPorcentagem && `(${formatPercent(sale.plataformaPorcentagem)})`}</div>
                     </div>
                   </td>
                   <td className="px-6 py-4 border-b border-gray-200 text-sm">

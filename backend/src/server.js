@@ -2,6 +2,9 @@ const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
 
+// Database
+const { initializeDatabase } = require('./database/connection');
+
 // Repositories
 const PlatformRepository = require('./repositories/PlatformRepository');
 const SaleRepository = require('./repositories/SaleRepository');
@@ -49,9 +52,21 @@ app.use((err, req, res, next) => {
 });
 
 // Start server
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
   console.log(`🚀 Servidor rodando na porta ${PORT}`);
   console.log(`📝 API disponível em http://localhost:${PORT}`);
+  
+  try {
+    // Inicializar banco de dados
+    await initializeDatabase();
+    
+    // Popular dados iniciais de plataformas
+    await platformRepository.seedData();
+    
+    console.log('✅ Aplicação iniciada com sucesso');
+  } catch (error) {
+    console.error('❌ Erro ao inicializar aplicação:', error);
+  }
 });
 
 module.exports = app;

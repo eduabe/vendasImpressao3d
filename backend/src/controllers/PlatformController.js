@@ -25,7 +25,7 @@ class PlatformController {
         porcentagemComissao: parseFloat(porcentagemComissao) || 0
       };
 
-      const created = this.platformRepository.create(platform);
+      const created = await this.platformRepository.create(platform);
       
       res.status(201).json({
         mensagem: 'Plataforma criada com sucesso',
@@ -44,7 +44,7 @@ class PlatformController {
    */
   async listAll(req, res) {
     try {
-      const platforms = this.platformRepository.findAll();
+      const platforms = await this.platformRepository.findAll();
       res.json({
         dados: platforms
       });
@@ -62,7 +62,7 @@ class PlatformController {
   async findById(req, res) {
     try {
       const { id } = req.params;
-      const platform = this.platformRepository.findById(id);
+      const platform = await this.platformRepository.findById(id);
 
       if (!platform) {
         return res.status(404).json({ 
@@ -94,7 +94,7 @@ class PlatformController {
         updateData.porcentagemComissao = parseFloat(porcentagemComissao);
       }
 
-      const updated = this.platformRepository.update(id, updateData);
+      const updated = await this.platformRepository.update(id, updateData);
 
       if (!updated) {
         return res.status(404).json({ 
@@ -120,7 +120,7 @@ class PlatformController {
   async delete(req, res) {
     try {
       const { id } = req.params;
-      const deleted = this.platformRepository.delete(id);
+      const deleted = await this.platformRepository.delete(id);
 
       if (!deleted) {
         return res.status(404).json({ 

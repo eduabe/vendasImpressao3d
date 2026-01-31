@@ -17,6 +17,7 @@ class SaleController {
   async create(req, res) {
     try {
       const {
+        descricao,
         valorRecebido,
         custoImpressao,
         custoEnvio,
@@ -44,7 +45,7 @@ class SaleController {
       }
 
       // Buscar plataforma para obter taxas
-      const platform = this.platformRepository.findById(plataformaId);
+      const platform = await this.platformRepository.findById(plataformaId);
       if (!platform) {
         return res.status(404).json({ 
           mensagem: 'Plataforma não encontrada' 
@@ -62,6 +63,7 @@ class SaleController {
 
       // Criar venda
       const sale = {
+        descricao: descricao ? descricao.trim() : '',
         valorRecebido: parseFloat(valorRecebido),
         custoImpressao: parseFloat(custoImpressao) || 0,
         custoVendaPlataforma: calculationResult.comissaoPlataformaTotal,
@@ -77,7 +79,7 @@ class SaleController {
         comissaoPlataformaTotal: calculationResult.comissaoPlataformaTotal
       };
 
-      const created = this.saleRepository.create(sale);
+      const created = await this.saleRepository.create(sale);
       
       res.status(201).json({
         mensagem: 'Venda criada com sucesso',
@@ -115,7 +117,7 @@ class SaleController {
       if (ordenarPor) filters.ordenarPor = ordenarPor;
       if (ordem) filters.ordem = ordem;
 
-      const sales = this.saleRepository.findByFilters(filters);
+      const sales = await this.saleRepository.findByFilters(filters);
       
       res.json({
         dados: sales,
@@ -135,7 +137,7 @@ class SaleController {
   async findById(req, res) {
     try {
       const { id } = req.params;
-      const sale = this.saleRepository.findById(id);
+      const sale = await this.saleRepository.findById(id);
 
       if (!sale) {
         return res.status(404).json({ 
@@ -159,6 +161,7 @@ class SaleController {
     try {
       const { id } = req.params;
       const {
+        descricao,
         valorRecebido,
         custoImpressao,
         custoEnvio,
@@ -167,7 +170,7 @@ class SaleController {
         status
       } = req.body;
 
-      const sale = this.saleRepository.findById(id);
+      const sale = await this.saleRepository.findById(id);
       if (!sale) {
         return res.status(404).json({ 
           mensagem: 'Venda não encontrada' 
@@ -178,7 +181,7 @@ class SaleController {
       
       // Se mudou a plataforma, recalcular lucro
       if (plataformaId && plataformaId !== sale.plataformaId) {
-        const platform = this.platformRepository.findById(plataformaId);
+        const platform = await this.platformRepository.findById(plataformaId);
         if (!platform) {
           return res.status(404).json({ 
             mensagem: 'Plataforma não encontrada' 
@@ -211,7 +214,7 @@ class SaleController {
         const valor = valorRecebido !== undefined ? parseFloat(valorRecebido) : sale.valorRecebido;
         const custoImp = custoImpressao !== undefined ? parseFloat(custoImpressao) : sale.custoImpressao;
         const custoEnv = custoEnvio !== undefined ? parseFloat(custoEnvio) : sale.custoEnvio;
-        const platform = this.platformRepository.findById(sale.plataformaId);
+        const platform = await this.platformRepository.findById(sale.plataformaId);
         
         const calculationResult = this.profitService.calculateAll({
           valorRecebido: valor,
@@ -231,9 +234,10 @@ class SaleController {
       }
 
       if (origemVenda !== undefined) updateData.origemVenda = origemVenda.trim();
+      if (descricao !== undefined) updateData.descricao = descricao ? descricao.trim() : '';
       if (status !== undefined) updateData.status = status;
 
-      const updated = this.saleRepository.update(id, updateData);
+      const updated = await this.saleRepository.update(id, updateData);
 
       res.json({
         mensagem: 'Venda atualizada com sucesso',
@@ -253,7 +257,7 @@ class SaleController {
   async delete(req, res) {
     try {
       const { id } = req.params;
-      const deleted = this.saleRepository.delete(id);
+      const deleted = await this.saleRepository.delete(id);
 
       if (!deleted) {
         return res.status(404).json({ 

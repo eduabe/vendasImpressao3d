@@ -4,6 +4,7 @@
 class Sale {
   constructor({
     id,
+    descricao,
     valorRecebido,
     custoImpressao,
     custoVendaPlataforma,
@@ -18,6 +19,7 @@ class Sale {
     comissaoPlataformaTotal
   }) {
     this.id = id;
+    this.descricao = descricao || '';
     this.valorRecebido = parseFloat(valorRecebido);
     this.custoImpressao = parseFloat(custoImpressao);
     this.custoVendaPlataforma = parseFloat(custoVendaPlataforma);

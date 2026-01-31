@@ -229,6 +229,11 @@ const SaleList = ({ onEdit }) => {
           <thead>
             <tr className="bg-gray-50">
               <th
+                className="px-6 py-4 border-b-2 border-gray-200 text-left text-xs font-bold text-gray-600 uppercase tracking-wider w-64"
+              >
+                Descrição
+              </th>
+              <th
                 onClick={() => handleSort('dataCadastro')}
                 className="px-6 py-4 border-b-2 border-gray-200 text-left text-xs font-bold text-gray-600 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
               >
@@ -269,7 +274,7 @@ const SaleList = ({ onEdit }) => {
           <tbody>
             {filteredSales.length === 0 ? (
               <tr>
-                <td colSpan="9" className="px-6 py-12 text-center text-gray-500">
+                <td colSpan="10" className="px-6 py-12 text-center text-gray-500">
                   <div className="text-6xl mb-4">📊</div>
                   <p className="text-lg font-semibold">Nenhuma venda encontrada</p>
                   <p className="text-sm">Tente ajustar os filtros ou cadastre uma nova venda</p>
@@ -283,6 +288,13 @@ const SaleList = ({ onEdit }) => {
                   animate={{ opacity: 1, y: 0 }}
                   className="hover:bg-gray-50 transition-colors duration-150"
                 >
+                  <td className="px-6 py-4 border-b border-gray-200 text-sm">
+                    <div className="max-w-xs">
+                      <span className="text-gray-900 font-medium">
+                        {sale.descricao || <span className="text-gray-400 italic">Sem descrição</span>}
+                      </span>
+                    </div>
+                  </td>
                   <td className="px-6 py-4 border-b border-gray-200 text-sm">
                     <span className="font-medium text-gray-900">{formatDate(sale.dataCadastro)}</span>
                   </td>

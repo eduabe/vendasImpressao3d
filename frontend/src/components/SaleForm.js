@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { DollarSign, Package, Truck, Store } from 'lucide-react';
+import { DollarSign, Package, Truck, Store, FileText } from 'lucide-react';
 import { createSale, updateSale, getPlatforms } from '../services/api';
 import SaleStatus from '../domain/models/SaleStatus';
 import toast from 'react-hot-toast';
@@ -8,6 +8,7 @@ const SaleForm = ({ sale, onSubmit, onCancel }) => {
   const [platforms, setPlatforms] = useState([]);
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
+    descricao: '',
     valorRecebido: '',
     custoImpressao: '',
     custoEnvio: '',
@@ -28,6 +29,7 @@ const SaleForm = ({ sale, onSubmit, onCancel }) => {
     fetchPlatforms();
     if (sale) {
       setFormData({
+        descricao: sale.descricao || '',
         valorRecebido: sale.valorRecebido,
         custoImpressao: sale.custoImpressao,
         custoEnvio: sale.custoEnvio,
@@ -61,6 +63,7 @@ const SaleForm = ({ sale, onSubmit, onCancel }) => {
 
     try {
       const data = {
+        descricao: formData.descricao.trim(),
         valorRecebido: parseFloat(formData.valorRecebido),
         custoImpressao: parseFloat(formData.custoImpressao) || 0,
         custoEnvio: parseFloat(formData.custoEnvio) || 0,
@@ -93,6 +96,21 @@ const SaleForm = ({ sale, onSubmit, onCancel }) => {
       </h2>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Descrição */}
+        <div className="mb-4 md:col-span-2">
+          <label className="block text-gray-700 text-sm font-bold mb-2 flex items-center">
+            <FileText className="w-4 h-4 mr-2 text-gray-600" />
+            Descrição do Item (opcional)
+          </label>
+          <textarea
+            name="descricao"
+            value={formData.descricao}
+            onChange={handleChange}
+            placeholder="Descreva o item vendido (ex: Miniatura de dragão, 15cm altura, cor vermelha)"
+            rows="3"
+            className="shadow appearance-none border-2 rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all resize-none"
+          />
+        </div>
         {/* Valor Recebido */}
         <div className="mb-4">
           <label className="block text-gray-700 text-sm font-bold mb-2 flex items-center">

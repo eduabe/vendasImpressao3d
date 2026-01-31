@@ -33,6 +33,7 @@ CREATE INDEX idx_plataformas_criacao ON plataformas(data_criacao);
 -- =============================================
 CREATE TABLE vendas (
     id SERIAL PRIMARY KEY,
+    descricao TEXT,
     valor_recebido DECIMAL(10, 2) NOT NULL,
     custo_impressao DECIMAL(10, 2) NOT NULL DEFAULT 0.00,
     custo_venda_plataforma DECIMAL(10, 2) NOT NULL DEFAULT 0.00,
@@ -57,6 +58,7 @@ CREATE TABLE vendas (
 
 -- Comentários da tabela
 COMMENT ON TABLE vendas IS 'Cadastro de vendas de impressão 3D';
+COMMENT ON COLUMN vendas.descricao IS 'Descrição livre do item vendido';
 COMMENT ON COLUMN vendas.valor_recebido IS 'Valor total recebido pela venda';
 COMMENT ON COLUMN vendas.custo_impressao IS 'Custo do filamento e energia da impressão';
 COMMENT ON COLUMN vendas.custo_venda_plataforma IS 'Taxa fixa cobrada pela plataforma';

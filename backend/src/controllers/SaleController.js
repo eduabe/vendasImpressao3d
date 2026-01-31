@@ -64,10 +64,11 @@ class SaleController {
       const sale = {
         valorRecebido: parseFloat(valorRecebido),
         custoImpressao: parseFloat(custoImpressao) || 0,
-        custoVendaPlataforma: platform.taxaVenda,
+        custoVendaPlataforma: calculationResult.comissaoPlataformaTotal,
         custoEnvio: parseFloat(custoEnvio) || 0,
         plataformaId,
         plataformaNome: platform.nome,
+        plataformaPorcentagem: platform.porcentagemComissao,
         origemVenda: origemVenda.trim(),
         status: SaleStatus.EM_PRODUCAO,
         dataCadastro: new Date().toISOString(),
@@ -186,7 +187,7 @@ class SaleController {
         
         updateData.plataformaId = plataformaId;
         updateData.plataformaNome = platform.nome;
-        updateData.custoVendaPlataforma = platform.taxaVenda;
+        updateData.plataformaPorcentagem = platform.porcentagemComissao;
         
         // Recalcular lucro se tiver valor recebido
         const valor = valorRecebido !== undefined ? parseFloat(valorRecebido) : sale.valorRecebido;
@@ -201,6 +202,7 @@ class SaleController {
           custoEnvio: custoEnv
         });
         
+        updateData.custoVendaPlataforma = calculationResult.comissaoPlataformaTotal;
         updateData.lucroLiquido = calculationResult.lucroLiquido;
         updateData.margemLucro = calculationResult.margemLucro;
         updateData.comissaoPlataformaTotal = calculationResult.comissaoPlataformaTotal;
@@ -222,6 +224,7 @@ class SaleController {
         if (valorRecebido !== undefined) updateData.valorRecebido = valor;
         if (custoImpressao !== undefined) updateData.custoImpressao = custoImp;
         if (custoEnvio !== undefined) updateData.custoEnvio = custoEnv;
+        updateData.custoVendaPlataforma = calculationResult.comissaoPlataformaTotal;
         updateData.lucroLiquido = calculationResult.lucroLiquido;
         updateData.margemLucro = calculationResult.margemLucro;
         updateData.comissaoPlataformaTotal = calculationResult.comissaoPlataformaTotal;

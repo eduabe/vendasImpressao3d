@@ -47,6 +47,7 @@
         ***DEVE*** respeitar regras de clean code
         ***DEVE*** ter toda sua interface em português
         ***DEVE*** deixar pronto um script sql para criação da base de dados
+        ***SEMPRE*** usar camelCase no front e no back
     </critico>
 
 </requirements>

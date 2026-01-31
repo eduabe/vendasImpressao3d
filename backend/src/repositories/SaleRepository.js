@@ -6,6 +6,27 @@ const { query } = require('../database/connection');
  */
 class SaleRepository {
   /**
+   * Mapeia nomes de colunas camelCase para snake_case
+   * @param {string} camelCaseColumn - Nome da coluna em camelCase
+   * @returns {string} Nome da coluna em snake_case
+   */
+  mapColumnToSnakeCase(camelCaseColumn) {
+    const columnMapping = {
+      'dataCadastro': 'data_cadastro',
+      'valorRecebido': 'valor_recebido',
+      'lucroLiquido': 'lucro_liquido',
+      'custoImpressao': 'custo_impressao',
+      'custoVendaPlataforma': 'custo_venda_plataforma',
+      'custoEnvio': 'custo_envio',
+      'plataformaId': 'plataforma_id',
+      'origemVenda': 'origem_venda',
+      'descricao': 'descricao',
+      'status': 'status',
+      'comissaoPlataformaTotal': 'comissao_plataforma_total'
+    };
+    return columnMapping[camelCaseColumn] || camelCaseColumn;
+  }
+  /**
    * Cria uma nova venda
    * @param {Sale} sale - Objeto venda
    * @returns {Promise<Sale>} Venda criada
@@ -14,10 +35,11 @@ class SaleRepository {
     const result = await query(
       `INSERT INTO vendas (
          valor_recebido, custo_impressao, custo_venda_plataforma, 
-         custo_envio, plataforma_id, origem_venda, status, 
-         data_cadastro, descricao, lucro_liquido, comissao_total
+         custo_envio, plataforma_id, plataforma_nome, origem_venda, 
+         status, data_cadastro, descricao, lucro_liquido, 
+         margem_lucro, comissao_plataforma_total
        )
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
        RETURNING *`,
       [
         sale.valorRecebido,
@@ -25,12 +47,14 @@ class SaleRepository {
         sale.custoVendaPlataforma,
         sale.custoEnvio,
         sale.plataformaId,
+        sale.plataformaNome,
         sale.origemVenda,
         sale.status,
         sale.dataCadastro || new Date(),
         sale.descricao,
         sale.lucroLiquido,
-        sale.comissaoTotal || 0
+        sale.margemLucro,
+        sale.comissaoPlataformaTotal || 0
       ]
     );
     return this.mapFromDb(result.rows[0]);
@@ -95,8 +119,8 @@ class SaleRepository {
       whereClause = `WHERE ${conditions.join(' AND ')}`;
     }
 
-    // Ordenação
-    const ordenarPor = filters.ordenarPor || 'data_cadastro';
+    // Ordenação - converter camelCase para snake_case se necessário
+    const ordenarPor = this.mapColumnToSnakeCase(filters.ordenarPor) || 'data_cadastro';
     const ordem = filters.ordem === 'asc' ? 'ASC' : 'DESC';
     const orderClause = `ORDER BY ${ordenarPor} ${ordem}`;
 
@@ -158,6 +182,12 @@ class SaleRepository {
       paramCount++;
     }
 
+    if (data.plataformaNome !== undefined) {
+      fields.push(`plataforma_nome = $${paramCount}`);
+      values.push(data.plataformaNome);
+      paramCount++;
+    }
+
     if (data.origemVenda !== undefined) {
       fields.push(`origem_venda = $${paramCount}`);
       values.push(data.origemVenda);
@@ -182,9 +212,15 @@ class SaleRepository {
       paramCount++;
     }
 
-    if (data.comissaoTotal !== undefined) {
-      fields.push(`comissao_total = $${paramCount}`);
-      values.push(data.comissaoTotal);
+    if (data.margemLucro !== undefined) {
+      fields.push(`margem_lucro = $${paramCount}`);
+      values.push(data.margemLucro);
+      paramCount++;
+    }
+
+    if (data.comissaoPlataformaTotal !== undefined) {
+      fields.push(`comissao_plataforma_total = $${paramCount}`);
+      values.push(data.comissaoPlataformaTotal);
       paramCount++;
     }
 
@@ -224,12 +260,14 @@ class SaleRepository {
       custoVendaPlataforma: parseFloat(row.custo_venda_plataforma),
       custoEnvio: parseFloat(row.custo_envio),
       plataformaId: row.plataforma_id,
+      plataformaNome: row.plataforma_nome,
       origemVenda: row.origem_venda,
       status: row.status,
       dataCadastro: row.data_cadastro,
       descricao: row.descricao,
       lucroLiquido: parseFloat(row.lucro_liquido),
-      comissaoTotal: parseFloat(row.comissao_total)
+      margemLucro: parseFloat(row.margem_lucro),
+      comissaoPlataformaTotal: parseFloat(row.comissao_plataforma_total)
     };
   }
 }

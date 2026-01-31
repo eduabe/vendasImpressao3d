@@ -15,6 +15,9 @@ export const formatCurrency = (value) => {
  * Formata porcentagem
  */
 export const formatPercent = (value) => {
+  if (value === undefined || value === null || isNaN(value)) {
+    return '0.00%';
+  }
   return `${value.toFixed(2)}%`;
 };
 

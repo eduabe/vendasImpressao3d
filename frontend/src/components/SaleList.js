@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { getSales, updateSale, deleteSale } from '../services/api';
 import { formatCurrency, formatPercent, formatDate } from '../utils/format';
 import { Trash2, Edit2, Filter, ArrowUp, ArrowDown } from 'lucide-react';
@@ -28,15 +28,7 @@ const SaleList = ({ onEdit }) => {
   });
   const [showFilters, setShowFilters] = useState(false);
 
-  useEffect(() => {
-    fetchSales();
-  }, []);
-
-  useEffect(() => {
-    applyFilters();
-  }, [sales, filters]);
-
-  const fetchSales = async () => {
+  const fetchSales = useCallback(async () => {
     try {
       setLoading(true);
       const data = await getSales(filters);
@@ -48,9 +40,13 @@ const SaleList = ({ onEdit }) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
-  const applyFilters = () => {
+  useEffect(() => {
+    fetchSales();
+  }, [fetchSales]);
+
+  const applyFilters = useCallback(() => {
     let filtered = [...sales];
 
     // Filtrar por status
@@ -91,7 +87,11 @@ const SaleList = ({ onEdit }) => {
     });
 
     setFilteredSales(filtered);
-  };
+  }, [sales, filters]);
+
+  useEffect(() => {
+    applyFilters();
+  }, [applyFilters]);
 
   const handleSort = (column) => {
     if (filters.ordenarPor === column) {
@@ -110,7 +110,6 @@ const SaleList = ({ onEdit }) => {
 
   const handleStatusChange = async (id, newStatus) => {
     try {
-      const sale = sales.find(s => s.id === id);
       await updateSale(id, { status: newStatus });
       toast.success('Status atualizado com sucesso');
       fetchSales();
@@ -386,7 +385,12 @@ const SaleList = ({ onEdit }) => {
             <div className="bg-purple-50 rounded-lg p-4">
               <div className="text-sm text-gray-600">Margem Média</div>
               <div className="text-xl font-bold text-purple-600">
-                {formatPercent(filteredSales.reduce((sum, s) => sum + s.margemLucro, 0) / filteredSales.length)}
+                {formatPercent(
+                  filteredSales
+                    .filter(s => s.margemLucro !== undefined && s.margemLucro !== null && !isNaN(s.margemLucro))
+                    .reduce((sum, s) => sum + s.margemLucro, 0) / 
+                  filteredSales.filter(s => s.margemLucro !== undefined && s.margemLucro !== null && !isNaN(s.margemLucro)).length || 0
+                )}
               </div>
             </div>
           </div>

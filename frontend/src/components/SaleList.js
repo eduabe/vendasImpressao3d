@@ -40,7 +40,7 @@ const SaleList = ({ onEdit }) => {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [filters]);
 
   useEffect(() => {
     fetchSales();

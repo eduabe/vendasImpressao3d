@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { DollarSign, Package, Truck, Store, FileText } from 'lucide-react';
 import { createSale, updateSale, getPlatforms } from '../services/api';
-import SaleStatus from '../domain/models/SaleStatus';
 import toast from 'react-hot-toast';
 
 const SaleForm = ({ sale, onSubmit, onCancel }) => {

@@ -1,8 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Toaster } from 'react-hot-toast';
 import { Plus, Settings } from 'lucide-react';
-import { getSales } from './services/api';
-import { formatCurrency, formatPercent } from './utils/format';
 import SaleList from './components/SaleList';
 import SaleForm from './components/SaleForm';
 import PlatformList from './components/PlatformList';

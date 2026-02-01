@@ -4,7 +4,7 @@
  */
 
 const cors = require('cors');
-const { initializeDatabase } = require('../src/database/connection');
+const { query } = require('../src/database/connection');
 const PlatformRepository = require('../src/repositories/PlatformRepository');
 const PlatformController = require('../src/controllers/PlatformController');
 
@@ -16,8 +16,7 @@ let platformController = null;
 
 async function initializeApp() {
   if (!platformController) {
-    await initializeDatabase();
-    const platformRepository = new PlatformRepository();
+    const platformRepository = new PlatformRepository(query);
     platformController = new PlatformController(platformRepository);
     await platformRepository.seedData();
   }

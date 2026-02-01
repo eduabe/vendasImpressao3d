@@ -48,6 +48,11 @@ module.exports = async (req, res) => {
     // Extrai ID da URL - em Vercel serverless functions o ID vem em req.query
     const { id } = req.query;
     
+    // Debug logging
+    console.log('req.query:', req.query);
+    console.log('id value:', id);
+    console.log('id type:', typeof id);
+    
     // Cria objeto params para compatibilidade com o controller
     const params = { id };
 

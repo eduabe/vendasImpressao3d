@@ -45,28 +45,34 @@ module.exports = async (req, res) => {
     // Inicializa aplicação
     await initializeApp();
 
-    // Extrai ID da URL
+    // Extrai ID da URL - em Vercel serverless functions o ID vem em req.query
     const { id } = req.query;
-    req.params = { id };
+    
+    // Cria objeto params para compatibilidade com o controller
+    const params = { id };
 
     // Parse do body se necessário
-    if (req.method !== 'GET') {
-      req.body = typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
+    let body = req.body;
+    if (req.method !== 'GET' && typeof req.body === 'string') {
+      body = JSON.parse(req.body);
     }
 
     const method = req.method;
     const controller = platformController;
+    
+    // Cria mock de request com params e body
+    const mockReq = { params, body };
 
     // Roteamento baseado no método HTTP
     switch (method) {
       case 'GET':
-        await controller.findById(req, res);
+        await controller.findById(mockReq, res);
         break;
       case 'PUT':
-        await controller.update(req, res);
+        await controller.update(mockReq, res);
         break;
       case 'DELETE':
-        await controller.delete(req, res);
+        await controller.delete(mockReq, res);
         break;
       default:
         res.status(405).json({ mensagem: 'Método não permitido' });

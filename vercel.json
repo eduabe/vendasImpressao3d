@@ -12,16 +12,16 @@
       "dest": "/api/plataformas/index.js"
     },
     {
-      "src": "/api/plataformas/(?<id>[^/]+)",
-      "dest": "/api/plataformas/[id].js"
+      "src": "/api/plataformas/([^/]+)",
+      "dest": "/api/plataformas/[id].js?id=$1"
     },
     {
       "src": "/api/vendas",
       "dest": "/api/vendas/index.js"
     },
     {
-      "src": "/api/vendas/(?<id>[^/]+)",
-      "dest": "/api/vendas/[id].js"
+      "src": "/api/vendas/([^/]+)",
+      "dest": "/api/vendas/[id].js?id=$1"
     }
   ]
 }

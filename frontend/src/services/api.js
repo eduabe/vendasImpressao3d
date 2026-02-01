@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'https://calculadora3d-neozllfvd-eduardo-nobuyuki-abes-projects.vercel.app/api';
+const API_URL = 'https://calculadora3d-three.vercel.app/api';
 
 // Sales API - backend route is /api/vendas (Portuguese)
 export const getSales = async (filtros = {}) => {

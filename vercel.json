@@ -1,0 +1,27 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "api/**/*.js",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/plataformas",
+      "dest": "/api/plataformas/index.js"
+    },
+    {
+      "src": "/api/plataformas/(?<id>[^/]+)",
+      "dest": "/api/plataformas/[id].js"
+    },
+    {
+      "src": "/api/vendas",
+      "dest": "/api/vendas/index.js"
+    },
+    {
+      "src": "/api/vendas/(?<id>[^/]+)",
+      "dest": "/api/vendas/[id].js"
+    }
+  ]
+}

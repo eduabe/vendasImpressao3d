@@ -4,10 +4,10 @@
  */
 
 const cors = require('cors');
-const { query } = require('../src/database/connection');
-const PlatformRepository = require('../src/repositories/PlatformRepository');
-const SaleRepository = require('../src/repositories/SaleRepository');
-const SaleController = require('../src/controllers/SaleController');
+const { query } = require('../../src/database/connection');
+const PlatformRepository = require('../../src/repositories/PlatformRepository');
+const SaleRepository = require('../../src/repositories/SaleRepository');
+const SaleController = require('../../src/controllers/SaleController');
 
 // Configuração CORS
 const corsMiddleware = cors();

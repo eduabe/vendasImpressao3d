@@ -46,17 +46,7 @@ module.exports = async (req, res) => {
     await initializeApp();
 
     // Extrai ID da URL - em Vercel serverless functions o ID vem em req.query
-    console.log('Full req.query:', JSON.stringify(req.query));
-    console.log('req.url:', req.url);
-    console.log('req.path:', req.path);
-    
     const id = req.query.id;
-    
-    // Debug logging
-    console.log('id value:', id);
-    console.log('id type:', typeof id);
-    console.log('id === undefined:', id === undefined);
-    console.log('id === null:', id === null);
     
     // Se id não estiver definido, retorna 404
     if (id === undefined || id === null) {

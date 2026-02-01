@@ -1,0 +1,49 @@
+# Dependencies
+
+node_modules
+
+# Testing
+
+coverage
+.nyc_output
+**tests**
+
+# Environment files
+
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# IDE
+
+.vscode
+.idea
+_.swp
+_.swo
+\*~
+
+# OS
+
+.DS_Store
+Thumbs.db
+
+# Documentation
+
+\*.md
+!README.md
+
+# Development files
+
+backend/src/server.js
+test
+
+# Database files (local development)
+
+_.db
+_.sqlite
+
+# Frontend
+
+frontend/

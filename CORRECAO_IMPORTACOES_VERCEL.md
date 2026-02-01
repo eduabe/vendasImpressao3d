@@ -41,14 +41,15 @@ calculadora-ganhos/
 │   ├── database/
 │   │   └── create_tables.sql
 │   └── ...
-└── vercel.json           # Configuração atualizada
+├── .vercelignore         # Configuração de exclusão
+└── vercel.json           # Configuração de build
 ```
 
 ## Arquivos Corrigidos
 
 ### 1. vercel.json
 
-Adicionado a seção `include` para garantir que todos os arquivos necessários sejam enviados para o Vercel:
+Configuração simplificada para build das serverless functions:
 
 ```json
 {
@@ -59,17 +60,39 @@ Adicionado a seção `include` para garantir que todos os arquivos necessários 
       "use": "@vercel/node"
     }
   ],
-  "include": [
-    "src/**/*",
-    "backend/database/**/*",
-    "package.json",
-    "node_modules/**/*"
-  ],
-  ...
+  "routes": [...]
 }
 ```
 
-### 2. api/vendas/index.js
+### 2. .vercelignore
+
+Criado arquivo para controlar o que NÃO deve ser incluído no deploy:
+
+```
+# Dependencies
+node_modules
+
+# Testing
+coverage
+.nyc_output
+**tests**
+
+# Environment files
+.env
+.env.local
+...
+
+# Development files
+backend/src/server.js
+test
+
+# Frontend
+frontend/
+```
+
+**Importante:** `src/` e `backend/database/` NÃO estão no `.vercelignore`, então são incluídos automaticamente.
+
+### 3. api/vendas/index.js
 
 Corrigidos os imports para usar `../src/`:
 
@@ -80,11 +103,11 @@ const SaleRepository = require("../src/repositories/SaleRepository");
 const SaleController = require("../src/controllers/SaleController");
 ```
 
-### 3. api/vendas/[id].js
+### 4. api/vendas/[id].js
 
 Mesmas correções acima.
 
-### 4. api/plataformas/index.js
+### 5. api/plataformas/index.js
 
 ```javascript
 const { query } = require("../src/database/connection");
@@ -92,11 +115,11 @@ const PlatformRepository = require("../src/repositories/PlatformRepository");
 const PlatformController = require("../src/controllers/PlatformController");
 ```
 
-### 5. api/plataformas/[id].js
+### 6. api/plataformas/[id].js
 
 Mesmas correções acima.
 
-### 6. src/database/connection.js
+### 7. src/database/connection.js
 
 Atualizado o caminho para ler o arquivo SQL:
 
@@ -110,9 +133,20 @@ const createTablesPath = path.join(
 ## Por que essa estrutura?
 
 - **api/**: Serverless functions que são o entry point para as requisições do Vercel
-- **src/**: Código fonte que é incluído no build do Vercel
+- **src/**: Código fonte que é incluído automaticamente no build do Vercel (não está no .vercelignore)
 - **backend/src/**: Cópia do código fonte para desenvolvimento local
-- **backend/database/**: Scripts SQL que são referenciados pelo código em src/
+- **backend/database/**: Scripts SQL que são incluídos automaticamente (não está no .vercelignore)
+- **.vercelignore**: Controla o que NÃO deve ser enviado para o Vercel
+
+## Como funciona o .vercelignore
+
+Por padrão, o Vercel inclui todos os arquivos do projeto no deploy, EXCETO:
+
+1. Arquivos listados no `.vercelignore`
+2. Arquivos listados no `.gitignore`
+3. `node_modules/` (sempre excluído)
+
+Como `src/` e `backend/database/` NÃO estão no `.vercelignore`, eles são incluídos automaticamente.
 
 ## Próximos Passos
 

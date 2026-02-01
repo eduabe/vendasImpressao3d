@@ -35,7 +35,9 @@ class PlatformRepository {
    * @returns {Promise<Platform|null>} Plataforma encontrada ou null
    */
   async findById(id) {
-    const result = await query('SELECT * FROM plataformas WHERE id = $1', [parseInt(id)]);
+    const idNumber = parseInt(id);
+    if (isNaN(idNumber)) return null;
+    const result = await query('SELECT * FROM plataformas WHERE id = $1', [idNumber]);
     if (result.rows.length === 0) return null;
     return this.mapFromDb(result.rows[0]);
   }
@@ -48,6 +50,7 @@ class PlatformRepository {
    */
   async update(id, data) {
     const idNumber = parseInt(id);
+    if (isNaN(idNumber)) return null;
     const fields = [];
     const values = [];
     let paramCount = 1;
@@ -89,7 +92,9 @@ class PlatformRepository {
    * @returns {Promise<boolean>} True se removida, false se não encontrada
    */
   async delete(id) {
-    const result = await query('DELETE FROM plataformas WHERE id = $1 RETURNING id', [parseInt(id)]);
+    const idNumber = parseInt(id);
+    if (isNaN(idNumber)) return false;
+    const result = await query('DELETE FROM plataformas WHERE id = $1 RETURNING id', [idNumber]);
     return result.rows.length > 0;
   }
 

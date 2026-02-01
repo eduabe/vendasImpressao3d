@@ -4,7 +4,7 @@
  */
 
 const cors = require('cors');
-const { initializeDatabase } = require('../src/database/connection');
+const { initializeDatabase } = require('../backend/src/database/connection');
 const PlatformRepository = require('../src/repositories/PlatformRepository');
 const PlatformController = require('../src/controllers/PlatformController');
 

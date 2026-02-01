@@ -6,6 +6,12 @@
       "use": "@vercel/node"
     }
   ],
+  "include": [
+    "src/**/*",
+    "backend/database/**/*",
+    "package.json",
+    "node_modules/**/*"
+  ],
   "routes": [
     {
       "src": "/api/plataformas",

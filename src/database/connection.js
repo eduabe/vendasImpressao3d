@@ -47,7 +47,7 @@ async function initializeDatabase() {
     // Ler e executar o script de criação de tabelas
     const fs = require('fs');
     const path = require('path');
-    const createTablesPath = path.join(__dirname, '../../database/create_tables.sql');
+    const createTablesPath = path.join(__dirname, '../../backend/database/create_tables.sql');
     const createTablesSQL = fs.readFileSync(createTablesPath, 'utf8');
     
     await client.query(createTablesSQL);

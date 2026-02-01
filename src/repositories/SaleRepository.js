@@ -136,7 +136,7 @@ class SaleRepository {
    * @returns {Promise<Sale|null>} Venda encontrada ou null
    */
   async findById(id) {
-    const result = await query('SELECT * FROM vendas WHERE id = $1', [id]);
+    const result = await query('SELECT * FROM vendas WHERE id = $1', [parseInt(id)]);
     if (result.rows.length === 0) return null;
     return this.mapFromDb(result.rows[0]);
   }
@@ -148,6 +148,7 @@ class SaleRepository {
    * @returns {Promise<Sale|null>} Venda atualizada ou null
    */
   async update(id, data) {
+    const idNumber = parseInt(id);
     const fields = [];
     const values = [];
     let paramCount = 1;
@@ -226,7 +227,7 @@ class SaleRepository {
 
     if (fields.length === 0) return await this.findById(id);
 
-    values.push(id);
+    values.push(idNumber);
 
     const result = await query(
       `UPDATE vendas SET ${fields.join(', ')} WHERE id = $${paramCount} RETURNING *`,
@@ -243,7 +244,7 @@ class SaleRepository {
    * @returns {Promise<boolean>} True se removida, false se não encontrada
    */
   async delete(id) {
-    const result = await query('DELETE FROM vendas WHERE id = $1 RETURNING id', [id]);
+    const result = await query('DELETE FROM vendas WHERE id = $1 RETURNING id', [parseInt(id)]);
     return result.rows.length > 0;
   }
 

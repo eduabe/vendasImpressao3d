@@ -1,5 +1,5 @@
 # Correção das Importações no Vercel
-
+ 
 ## Problema Identificado
 
 Erro ao fazer deploy no Vercel:

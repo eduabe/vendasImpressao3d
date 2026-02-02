@@ -13,7 +13,7 @@ const statusConfig = {
   'Finalizada': { color: 'bg-green-100 text-green-800', icon: '✅' }
 };
 
-const SaleList = ({ onEdit }) => {
+const SaleList = ({ onEdit, refreshKey }) => {
   const [sales, setSales] = useState([]);
   const [filteredSales, setFilteredSales] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -28,7 +28,7 @@ const SaleList = ({ onEdit }) => {
   });
   const [showFilters, setShowFilters] = useState(false);
 
-  const fetchSales = useCallback(async () => {
+  const fetchSales = async () => {
     try {
       setLoading(true);
       const data = await getSales(filters);
@@ -40,11 +40,11 @@ const SaleList = ({ onEdit }) => {
     } finally {
       setLoading(false);
     }
-  }, [filters]);
+  };
 
   useEffect(() => {
     fetchSales();
-  }, [fetchSales]);
+  }, [filters, refreshKey]);
 
   const applyFilters = useCallback(() => {
     let filtered = [...sales];

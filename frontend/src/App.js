@@ -10,6 +10,7 @@ function App() {
   const [mostrarFormularioVenda, setMostrarFormularioVenda] = useState(false);
   const [mostrarPlataformas, setMostrarPlataformas] = useState(false);
   const [vendaEditando, setVendaEditando] = useState(null);
+  const [refreshKey, setRefreshKey] = useState(0);
 
   const handleNovaVenda = () => {
     setVendaEditando(null);
@@ -24,6 +25,7 @@ function App() {
   const handleSalvarVenda = () => {
     setMostrarFormularioVenda(false);
     setVendaEditando(null);
+    setRefreshKey(prev => prev + 1);
   };
 
   const handleCancelarVenda = () => {
@@ -97,7 +99,7 @@ function App() {
               <PlatformList />
             </div>
           ) : (
-            <SaleList onEdit={handleEditarVenda} />
+            <SaleList onEdit={handleEditarVenda} refreshKey={refreshKey} />
           )}
         </main>
       </div>

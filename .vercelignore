@@ -41,9 +41,5 @@ test
 
 # Database files (local development)
 
-_.db
-_.sqlite
-
-# Frontend
-
-frontend/
+*.db
+*.sqlite

@@ -179,7 +179,17 @@ class SaleController {
 
       const updateData = {};
       
-      // Se mudou a plataforma, recalcular lucro
+      // Atualizar campos simples (sempre enviar se fornecidos)
+      if (descricao !== undefined) updateData.descricao = descricao ? descricao.trim() : '';
+      if (origemVenda !== undefined) updateData.origemVenda = origemVenda.trim();
+      if (status !== undefined) updateData.status = status;
+      
+      // Atualizar campos de custo (sempre enviar se fornecidos)
+      if (custoImpressao !== undefined) updateData.custoImpressao = parseFloat(custoImpressao) || 0;
+      if (custoEnvio !== undefined) updateData.custoEnvio = parseFloat(custoEnvio) || 0;
+      if (valorRecebido !== undefined) updateData.valorRecebido = parseFloat(valorRecebido);
+      
+      // Se mudou a plataforma, atualizar e recalcular lucro
       if (plataformaId && plataformaId !== sale.plataformaId) {
         const platform = await this.platformRepository.findById(plataformaId);
         if (!platform) {
@@ -192,7 +202,7 @@ class SaleController {
         updateData.plataformaNome = platform.nome;
         updateData.plataformaPorcentagem = platform.porcentagemComissao;
         
-        // Recalcular lucro se tiver valor recebido
+        // Recalcular lucro
         const valor = valorRecebido !== undefined ? parseFloat(valorRecebido) : sale.valorRecebido;
         const custoImp = custoImpressao !== undefined ? parseFloat(custoImpressao) : sale.custoImpressao;
         const custoEnv = custoEnvio !== undefined ? parseFloat(custoEnvio) : sale.custoEnvio;
@@ -224,18 +234,11 @@ class SaleController {
           custoEnvio: custoEnv
         });
         
-        if (valorRecebido !== undefined) updateData.valorRecebido = valor;
-        if (custoImpressao !== undefined) updateData.custoImpressao = custoImp;
-        if (custoEnvio !== undefined) updateData.custoEnvio = custoEnv;
         updateData.custoVendaPlataforma = calculationResult.comissaoPlataformaTotal;
         updateData.lucroLiquido = calculationResult.lucroLiquido;
         updateData.margemLucro = calculationResult.margemLucro;
         updateData.comissaoPlataformaTotal = calculationResult.comissaoPlataformaTotal;
       }
-
-      if (origemVenda !== undefined) updateData.origemVenda = origemVenda.trim();
-      if (descricao !== undefined) updateData.descricao = descricao ? descricao.trim() : '';
-      if (status !== undefined) updateData.status = status;
 
       const updated = await this.saleRepository.update(id, updateData);
 

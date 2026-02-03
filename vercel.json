@@ -1,3 +1,15 @@
 {
-  "version": 2
+  "buildCommand": "echo 'Using pre-built frontend'",
+  "outputDirectory": "build",
+  "installCommand": "echo 'Skip install - using pre-built'",
+  "rewrites": [
+    {
+      "source": "/api/:path*",
+      "destination": "/api/:path*"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
 }

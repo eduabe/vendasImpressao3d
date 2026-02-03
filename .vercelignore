@@ -44,6 +44,4 @@ test
 _.db
 _.sqlite
 
-# Frontend
 
-frontend/

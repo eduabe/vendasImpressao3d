@@ -179,60 +179,55 @@ class SaleController {
 
       const updateData = {};
       
-      // Se mudou a plataforma, recalcular lucro
+      // Determinar valores a usar (novo valor ou valor atual)
+      const valor = valorRecebido !== undefined ? parseFloat(valorRecebido) : sale.valorRecebido;
+      const custoImp = custoImpressao !== undefined ? parseFloat(custoImpressao) : sale.custoImpressao;
+      const custoEnv = custoEnvio !== undefined ? parseFloat(custoEnvio) : sale.custoEnvio;
+      let plataforma = null;
+      let precisaRecalcular = false;
+      
+      // Verificar se precisa recalcular lucro
       if (plataformaId && plataformaId !== sale.plataformaId) {
-        const platform = await this.platformRepository.findById(plataformaId);
-        if (!platform) {
+        // Se mudou a plataforma
+        plataforma = await this.platformRepository.findById(plataformaId);
+        if (!plataforma) {
           return res.status(404).json({ 
             mensagem: 'Plataforma não encontrada' 
           });
         }
         
         updateData.plataformaId = plataformaId;
-        updateData.plataformaNome = platform.nome;
-        updateData.plataformaPorcentagem = platform.porcentagemComissao;
-        
-        // Recalcular lucro se tiver valor recebido
-        const valor = valorRecebido !== undefined ? parseFloat(valorRecebido) : sale.valorRecebido;
-        const custoImp = custoImpressao !== undefined ? parseFloat(custoImpressao) : sale.custoImpressao;
-        const custoEnv = custoEnvio !== undefined ? parseFloat(custoEnvio) : sale.custoEnvio;
-        
-        const calculationResult = this.profitService.calculateAll({
-          valorRecebido: valor,
-          custoImpressao: custoImp,
-          taxaFixaPlataforma: platform.taxaVenda,
-          porcentagemComissao: platform.porcentagemComissao,
-          custoEnvio: custoEnv
-        });
-        
-        updateData.custoVendaPlataforma = calculationResult.comissaoPlataformaTotal;
-        updateData.lucroLiquido = calculationResult.lucroLiquido;
-        updateData.margemLucro = calculationResult.margemLucro;
-        updateData.comissaoPlataformaTotal = calculationResult.comissaoPlataformaTotal;
+        updateData.plataformaNome = plataforma.nome;
+        updateData.plataformaPorcentagem = plataforma.porcentagemComissao;
+        precisaRecalcular = true;
       } else if (valorRecebido !== undefined || custoImpressao !== undefined || custoEnvio !== undefined) {
-        // Se mudou valores mas não plataforma, recalcular lucro também
-        const valor = valorRecebido !== undefined ? parseFloat(valorRecebido) : sale.valorRecebido;
-        const custoImp = custoImpressao !== undefined ? parseFloat(custoImpressao) : sale.custoImpressao;
-        const custoEnv = custoEnvio !== undefined ? parseFloat(custoEnvio) : sale.custoEnvio;
-        const platform = await this.platformRepository.findById(sale.plataformaId);
-        
+        // Se mudou valores mas não plataforma, recalcular também
+        plataforma = await this.platformRepository.findById(sale.plataformaId);
+        precisaRecalcular = true;
+      }
+      
+      // Se precisa recalcular, faz o cálculo
+      if (precisaRecalcular) {
         const calculationResult = this.profitService.calculateAll({
           valorRecebido: valor,
           custoImpressao: custoImp,
-          taxaFixaPlataforma: platform.taxaVenda,
-          porcentagemComissao: platform.porcentagemComissao,
+          taxaFixaPlataforma: plataforma.taxaVenda,
+          porcentagemComissao: plataforma.porcentagemComissao,
           custoEnvio: custoEnv
         });
         
-        if (valorRecebido !== undefined) updateData.valorRecebido = valor;
-        if (custoImpressao !== undefined) updateData.custoImpressao = custoImp;
-        if (custoEnvio !== undefined) updateData.custoEnvio = custoEnv;
         updateData.custoVendaPlataforma = calculationResult.comissaoPlataformaTotal;
         updateData.lucroLiquido = calculationResult.lucroLiquido;
         updateData.margemLucro = calculationResult.margemLucro;
         updateData.comissaoPlataformaTotal = calculationResult.comissaoPlataformaTotal;
       }
+      
+      // Atualizar campos numéricos se foram enviados
+      if (valorRecebido !== undefined) updateData.valorRecebido = valor;
+      if (custoImpressao !== undefined) updateData.custoImpressao = custoImp;
+      if (custoEnvio !== undefined) updateData.custoEnvio = custoEnv;
 
+      // Atualizar campos de texto
       if (origemVenda !== undefined) updateData.origemVenda = origemVenda.trim();
       if (descricao !== undefined) updateData.descricao = descricao ? descricao.trim() : '';
       if (status !== undefined) updateData.status = status;

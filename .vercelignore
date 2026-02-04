@@ -40,6 +40,5 @@ backend/src/server.js
 test
 
 # Database files (local development)
-
-*.db
-*.sqlite
+_.db
+_.sqlite

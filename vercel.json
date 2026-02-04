@@ -1,6 +1,18 @@
 {
   "version": 2,
-  "installCommand": "cd frontend && npm install",
   "buildCommand": "cd frontend && npm run build",
-  "outputDirectory": "frontend/build"
+  "outputDirectory": "frontend/build",
+  "installCommand": "cd frontend && npm install",
+  "framework": "create-react-app",
+  "rewrites": [
+    {
+      "source": "/api/:path*",
+      "destination": "/api/:path*"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/frontend/index.html"
+    }
+  ]
 }
+

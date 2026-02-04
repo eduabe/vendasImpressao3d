@@ -88,7 +88,7 @@ const SaleForm = ({ sale, onSubmit, onCancel }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="bg-white shadow-lg rounded-lg p-6 mb-6">
+    <form onSubmit={handleSubmit} className="bg-white shadow-lg rounded-lg p-6 mb-6" data-testid="sale-form">
       <h2 className="text-2xl font-bold mb-6 text-gray-800 flex items-center">
         <Package className="w-6 h-6 mr-2 text-blue-600" />
         {sale?.id ? 'Editar Venda' : 'Registrar Nova Venda'}
@@ -108,6 +108,7 @@ const SaleForm = ({ sale, onSubmit, onCancel }) => {
             placeholder="Descreva o item vendido (ex: Miniatura de dragão, 15cm altura, cor vermelha)"
             rows="3"
             className="shadow appearance-none border-2 rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all resize-none"
+            data-testid="descricao-input"
           />
         </div>
         {/* Valor Recebido */}
@@ -126,6 +127,7 @@ const SaleForm = ({ sale, onSubmit, onCancel }) => {
             placeholder="0.00"
             className="shadow appearance-none border-2 rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all"
             required
+            data-testid="valor-recebido-input"
           />
         </div>
 
@@ -144,6 +146,7 @@ const SaleForm = ({ sale, onSubmit, onCancel }) => {
             min="0"
             placeholder="0.00"
             className="shadow appearance-none border-2 rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
+            data-testid="custo-impressao-input"
           />
         </div>
 
@@ -162,6 +165,7 @@ const SaleForm = ({ sale, onSubmit, onCancel }) => {
             min="0"
             placeholder="0.00"
             className="shadow appearance-none border-2 rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+            data-testid="custo-envio-input"
           />
         </div>
 
@@ -177,6 +181,7 @@ const SaleForm = ({ sale, onSubmit, onCancel }) => {
             onChange={handleChange}
             className="shadow appearance-none border-2 rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white transition-all"
             required
+            data-testid="plataforma-select"
           >
             <option value="">Selecione a plataforma</option>
             {platforms.map(platform => (
@@ -222,6 +227,7 @@ const SaleForm = ({ sale, onSubmit, onCancel }) => {
           type="submit"
           className="px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition duration-200 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
           disabled={loading}
+          data-testid="submit-button"
         >
           {loading ? 'Salvando...' : sale?.id ? 'Atualizar' : 'Salvar'}
         </button>

@@ -154,7 +154,7 @@ const SaleList = ({ onEdit, refreshKey }) => {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6" data-testid="sale-list">
       {/* Filtros */}
       <div className="bg-white shadow-md rounded-lg p-6">
         <button
@@ -286,6 +286,8 @@ const SaleList = ({ onEdit, refreshKey }) => {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   className="hover:bg-gray-50 transition-colors duration-150"
+                  data-testid="sale-item"
+                  data-descricao={sale.descricao || "Sem descrição"}
                 >
                   <td className="px-6 py-4 border-b border-gray-200 text-sm">
                     <div className="max-w-xs">

@@ -177,6 +177,11 @@ class SaleController {
         });
       }
 
+      // Log valores antes da atualização
+      console.info(
+        `[SaleController] Atualizando venda ${id}. Valores antigos: custoImpressao=${sale.custoImpressao}, custoEnvio=${sale.custoEnvio}`,
+      );
+
       const updateData = {};
       
       // Se mudou a plataforma, recalcular lucro
@@ -209,6 +214,21 @@ class SaleController {
         updateData.lucroLiquido = calculationResult.lucroLiquido;
         updateData.margemLucro = calculationResult.margemLucro;
         updateData.comissaoPlataformaTotal = calculationResult.comissaoPlataformaTotal;
+        
+        // Adicionar campos que mudaram ao updateData
+        if (valorRecebido !== undefined) updateData.valorRecebido = valor;
+        
+        // Adicionar campos de custo ao updateData (usando novos valores ou existentes)
+        if (custoImpressao !== undefined) {
+          updateData.custoImpressao = custoImp;
+        } else {
+          updateData.custoImpressao = sale.custoImpressao;
+        }
+        if (custoEnvio !== undefined) {
+          updateData.custoEnvio = custoEnv;
+        } else {
+          updateData.custoEnvio = sale.custoEnvio;
+        }
       } else if (valorRecebido !== undefined || custoImpressao !== undefined || custoEnvio !== undefined) {
         // Se mudou valores mas não plataforma, recalcular lucro também
         const valor = valorRecebido !== undefined ? parseFloat(valorRecebido) : sale.valorRecebido;
@@ -239,11 +259,18 @@ class SaleController {
 
       const updated = await this.saleRepository.update(id, updateData);
 
-      res.json({
+      // Log após atualização bem-sucedida
+      console.info(
+        `[SaleController] Venda ${id} atualizada. Valores novos: custoImpressao=${updateData.custoImpressao !== undefined ? updateData.custoImpressao : "inalterado"}, custoEnvio=${updateData.custoEnvio !== undefined ? updateData.custoEnvio : "inalterado"}, lucroLiquido=${updateData.lucroLiquido || "inalterado"}`,
+      );
+
+      res.status(200).json({
         mensagem: 'Venda atualizada com sucesso',
         dados: updated
       });
     } catch (error) {
+      const saleId = req.params.id || 'unknown';
+      console.error(`[SaleController] Erro ao atualizar venda ${saleId}:`, error.message);
       res.status(500).json({ 
         mensagem: 'Erro ao atualizar venda',
         erro: error.message 

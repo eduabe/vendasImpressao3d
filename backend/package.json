@@ -8,6 +8,7 @@
     "dev": "nodemon src/server.js",
     "test": "jest --coverage",
     "test:watch": "jest --watch",
+    "test:integration": "jest --testPathPattern=\\.integration\\.test\\.js$",
     "vercel-build": "echo 'Build completed'",
     "deploy": "vercel --prod"
   },

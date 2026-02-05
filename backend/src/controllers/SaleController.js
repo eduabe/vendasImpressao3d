@@ -220,12 +220,17 @@ class SaleController {
         updateData.lucroLiquido = calculationResult.lucroLiquido;
         updateData.margemLucro = calculationResult.margemLucro;
         updateData.comissaoPlataformaTotal = calculationResult.comissaoPlataformaTotal;
+        
+        // Atualizar campos numéricos usados no cálculo (inclui custoImpressao e custoEnvio)
+        updateData.valorRecebido = valor;
+        updateData.custoImpressao = custoImp;
+        updateData.custoEnvio = custoEnv;
+      } else {
+        // Se não precisa recalcular, atualizar apenas campos individuais se foram enviados
+        if (valorRecebido !== undefined) updateData.valorRecebido = valor;
+        if (custoImpressao !== undefined) updateData.custoImpressao = custoImp;
+        if (custoEnvio !== undefined) updateData.custoEnvio = custoEnv;
       }
-      
-      // Atualizar campos numéricos se foram enviados
-      if (valorRecebido !== undefined) updateData.valorRecebido = valor;
-      if (custoImpressao !== undefined) updateData.custoImpressao = custoImp;
-      if (custoEnvio !== undefined) updateData.custoEnvio = custoEnv;
 
       // Atualizar campos de texto
       if (origemVenda !== undefined) updateData.origemVenda = origemVenda.trim();

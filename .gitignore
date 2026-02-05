@@ -38,3 +38,4 @@ lerna-debug.log*
 Thumbs.db
 .vercel
 .env*.local
+ 

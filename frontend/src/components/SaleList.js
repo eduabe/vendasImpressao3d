@@ -28,7 +28,7 @@ const SaleList = ({ onEdit, refreshKey }) => {
   });
   const [showFilters, setShowFilters] = useState(false);
 
-  const fetchSales = async () => {
+  const fetchSales = useCallback(async () => {
     try {
       setLoading(true);
       const data = await getSales(filters);
@@ -40,11 +40,11 @@ const SaleList = ({ onEdit, refreshKey }) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [filters]);
 
   useEffect(() => {
     fetchSales();
-  }, [filters, refreshKey]);
+  }, [fetchSales, refreshKey]);
 
   const applyFilters = useCallback(() => {
     let filtered = [...sales];

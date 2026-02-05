@@ -23,7 +23,7 @@ async function initializeApp() {
 }
 
 module.exports = async (req, res) => {
-  // Configura CORS manualmente
+  // Configura CORS manualmente primeiro
   res.setHeader('Access-Control-Allow-Credentials', true);
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
@@ -34,11 +34,11 @@ module.exports = async (req, res) => {
 
   // Responde imediatamente a requisições OPTIONS (preflight)
   if (req.method === 'OPTIONS') {
-    res.status(200).end();
+    res.status(204).end();
     return;
   }
 
-  // Configura headers adicionais
+  // Configura headers adicionais para outras requisições
   res.setHeader('Content-Type', 'application/json');
 
   try {
